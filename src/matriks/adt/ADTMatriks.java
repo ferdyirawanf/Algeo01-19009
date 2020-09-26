@@ -6,8 +6,9 @@ public class ADTMatriks {
     /* ##### KONSTUKTOR definisi MATRIK ##### */
     int BrsEff;
     int KolEff;
-    double[][] Mem;
-    double[][] MemS;
+    double[][] Mem; // atribut utama matik inputan
+    double[][] MemS; // atribut matrik segitiga atas 
+    int Kdet; //faktor pangkat di determinen
     Scanner input = new Scanner(System.in);
 
 
@@ -72,8 +73,6 @@ public class ADTMatriks {
         for (int i = 0; i < NBrsEff() ;i++ ) {
             for (int j = 0;j < NKolEff() ;j++ ) {
                 Mem[i][j] = input.nextDouble();
-                MemS[i][j] = Mem[i][j];
-
             }
         }
     }
@@ -88,15 +87,35 @@ public class ADTMatriks {
 	*/
         for (int i = 0; i < NBrsEff() ;i++ ) {
             for (int j = 0;j < NKolEff() ;j++ ) {
+                int temp;
+                temp = (int) MemS[i][j];
                 if (j == GetLastIdxKol()){
-                    System.out.println(Elmt(i,j));
+
+                    if(temp == MemS[i][j] ){
+                        System.out.println(temp);
+                    }else{
+                        System.out.println(MemS[i][j]);
+                    }
+
                 }else{
-                    System.out.print( Elmt(i,j) +" ");
+                    if(temp == MemS[i][j] ){
+                        System.out.print( temp +" ");
+                    }else{
+                        System.out.print( MemS[i][j] +" ");
+                    }
                 }
 
             }
 
         }
+    }
+    public void MakeMatrikS(){
+    /** Membuta salinan matrik Mem[N][N] ke MemS[N][N] sebagai persiapan matrik segitiga **/
+    	for(int i = GetFirstIdxBrs(); i <= GetLastIdxBrs(); i++){
+    		for (int j = GetFirstIdxKol(); j <= GetLastIdxKol(); j++){
+				MemS[i][j] = Mem[i][j];
+			}
+		}
     }
     /* ********** KELOMPOK TEST TERHADAP MATRIKS ********** */
     public boolean IsBujurSangkar(){
@@ -104,8 +123,11 @@ public class ADTMatriks {
     	return NBrsEff()== NKolEff();
     }
 
-    public void SegitigaAtas(){
+    public void MakeSegitigaAtas(){
+    /** Membuaat matrik MemS menjadi mattrik segitiga atas **/
     	if(IsBujurSangkar()){
+    		MakeMatrikS(); // salnin matrik Men ke MenS
+    		Kdet = 0;
     		for (int i=0; i < NBrsEff()-1 ;i++ ) {
     			if(MemS[i][i] == 0 ){
     				int idx = i+1;
@@ -120,6 +142,7 @@ public class ADTMatriks {
 	    					MemS[idx][j] = temp;
 	    				}
 	    			}
+	    			Kdet ++;
     			}
     			double pengkali;
     			for (int j = i + 1; j < NBrsEff(); j++) {
@@ -135,13 +158,25 @@ public class ADTMatriks {
     }
 
     public void TulisMatrikSegitigaAtas(){
-        SegitigaAtas();
+        MakeSegitigaAtas();
         for (int i = 0; i < NBrsEff() ;i++ ) {
             for (int j = 0;j < NKolEff() ;j++ ) {
+            	int temp;
+            	temp = (int) MemS[i][j];
                 if (j == GetLastIdxKol()){
-                    System.out.println(MemS[i][j]);
+                	
+                	if(temp == MemS[i][j] ){
+                		System.out.println(temp);
+                	}else{
+                		System.out.println(MemS[i][j]);
+                	}
+      
                 }else{
-                    System.out.print( MemS[i][j] +" ");
+                	if(temp == MemS[i][j] ){
+                		System.out.print( temp +" ");
+                	}else{
+                		System.out.print( MemS[i][j] +" ");
+                	}
                 }
 
             }
