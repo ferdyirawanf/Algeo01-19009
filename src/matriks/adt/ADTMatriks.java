@@ -88,20 +88,20 @@ public class ADTMatriks {
         for (int i = 0; i < NBrsEff() ;i++ ) {
             for (int j = 0;j < NKolEff() ;j++ ) {
                 int temp;
-                temp = (int) MemS[i][j];
+                temp = (int) Mem[i][j];
                 if (j == GetLastIdxKol()){
 
-                    if(temp == MemS[i][j] ){
+                    if(temp == Mem[i][j] ){
                         System.out.println(temp);
                     }else{
-                        System.out.println(MemS[i][j]);
+                        System.out.println(Mem[i][j]);
                     }
 
                 }else{
-                    if(temp == MemS[i][j] ){
+                    if(temp == Mem[i][j] ){
                         System.out.print( temp +" ");
                     }else{
-                        System.out.print( MemS[i][j] +" ");
+                        System.out.print( Mem[i][j] +" ");
                     }
                 }
 
