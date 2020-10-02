@@ -4,6 +4,7 @@ import java.util.zip.Adler32;
 import java.util.Date;
 
 public class Menu {
+    TulisFile Kata = new TulisFile();
     int menu;
     Scanner input = new Scanner(System.in);
     InputData Input = new InputData();
@@ -41,7 +42,12 @@ public class Menu {
         } else if (selectedMenu.equals("5")) {
             menu +=400;
         } else if (selectedMenu.equals("0")) {
-            System.exit(0);
+            if (Kata.nData == 0) {
+                System.exit(0);   
+            }else{
+                menu = 0;
+            }
+            
         } else {
             System.out.println("Kamu salah pilih menu!");
             backToMenu();
@@ -197,6 +203,7 @@ public class Menu {
         M1.TulisMatrik();
         M1.TulisMatrikGauss();
         M1.TulisSPLGaus();
+        Kata.ADDkata(M1.FileToSave);
 
         menu =101;
     }
@@ -214,6 +221,7 @@ public class Menu {
         M1.TulisMatrik();
         M1.TulisMatrikGausJordan();
         M1.TulisSPLGausJordan();
+        Kata.ADDkata(M1.FileToSave);
 
         menu =101;
 
@@ -231,6 +239,7 @@ public class Menu {
         M1.BacaMatriks();
         M1.TulisMatrik();
         M1.TulisSPLmatrikBalikan();
+        Kata.ADDkata(M1.FileToSave);
 
         menu =101;
     }
@@ -247,6 +256,7 @@ public class Menu {
         M1.BacaMatriks();
         M1.TulisMatrik();
         M1.DeterminenXYZCramer();
+        Kata.ADDkata(M1.FileToSave);
 
         menu =101;
     }
@@ -264,6 +274,8 @@ public class Menu {
         M1.TulisMatrik();
         M1.TulisMatrikGauss();
         M1.TulisSPLGaus();
+        Kata.ADDkata(M1.FileToSave);
+
 
         menu =101;
     }
@@ -281,6 +293,8 @@ public class Menu {
         M1.TulisMatrik();
         M1.TulisMatrikGausJordan();
         M1.TulisSPLGausJordan();
+        Kata.ADDkata(M1.FileToSave);
+
 
         menu =101;
     }
@@ -297,7 +311,7 @@ public class Menu {
         M1.Mem = Input.MatrikFile;
         M1.TulisMatrik();
         M1.TulisSPLmatrikBalikan();
-
+        Kata.ADDkata(M1.FileToSave);
         menu =101;
     }
     public void MenuSplKCif(){
@@ -313,6 +327,7 @@ public class Menu {
         M1.Mem =Input.MatrikFile;
         M1.TulisMatrik();
         M1.DeterminenXYZCramer();
+        Kata.ADDkata(M1.FileToSave);
 
         menu =101;
     }
@@ -404,6 +419,7 @@ public class Menu {
         M1.BacaMatriks();
         M1.TulisMatrik();
         M1.TulisDeterminanReduksi();
+        Kata.ADDkata(M1.FileToSave);
 
 
         menu = 200;
@@ -421,6 +437,7 @@ public class Menu {
         M1.BacaMatriks();
         M1.TulisMatrik();
         M1.TulisDeterminanKofaktor();
+        Kata.ADDkata(M1.FileToSave);
 
         menu = 200;
     }
@@ -437,6 +454,7 @@ public class Menu {
         M1.Mem =Input.MatrikFile;
         M1.TulisMatrik();
         M1.TulisDeterminanReduksi();
+        Kata.ADDkata(M1.FileToSave);
 
         menu = 200;
     }
@@ -453,6 +471,7 @@ public class Menu {
         M1.Mem =Input.MatrikFile;
         M1.TulisMatrik();
         M1.TulisDeterminanKofaktor();
+        Kata.ADDkata(M1.FileToSave);
 
         menu = 200;
     }
@@ -492,6 +511,7 @@ public class Menu {
         M1.BacaMatriks();
         M1.TulisMatrik();
         M1.ProgramTulisMatrikBalikan();
+        Kata.ADDkata(M1.FileToSave);
 
         menu = 300;
     }
@@ -507,6 +527,7 @@ public class Menu {
         M1.Mem =Input.MatrikFile;
         M1.TulisMatrik();
         M1.ProgramTulisMatrikBalikan();
+        Kata.ADDkata(M1.FileToSave);
 
         menu = 300;
     }
@@ -547,6 +568,7 @@ public class Menu {
         M1.TulisMatrik();
         M1.BacaEstimasiIP();
         M1.BacaTulisInterpolasi();
+        Kata.ADDkata(M1.FileToSave);
 
         menu = 400;
     }
@@ -563,6 +585,7 @@ public class Menu {
         M1.TulisMatrik();
         M1.BacaEstimasiIP();
         M1.BacaTulisInterpolasi();
+        Kata.ADDkata(M1.FileToSave);
 
         menu = 400;
     }
@@ -604,6 +627,7 @@ public class Menu {
         M1.TulisMatrik();
         M1.TulisTaksiranRe();
         M1.BacaTulisSolusiRe();
+        Kata.ADDkata(M1.FileToSave);
 
         menu = 500;
     }
@@ -619,10 +643,37 @@ public class Menu {
         ADTMatriks M1 = new ADTMatriks(Input.NB(), Input.NR());
         M1.Mem =Input.MatrikFile;
         M1.TulisMatrik();
-        M1.TulisTaksiranRe();
+        
+        M1.BacaTaksiranXre();
         M1.BacaTulisSolusiRe();
+        Kata.ADDkata(M1.FileToSave);
 
         menu = 500;
+    }
+    public void MenuSave(){
+        System.out.println("=====        SIMPAN DATA      =======");
+        System.out.println("     " + date.toString());
+        System.out.println("-------------------------------------");
+        System.out.println("Terdapat "+ Kata.nData +"data yang telah diolah");
+        System.out.println("[0] Tidak  [1] Simpan  [2] Menu Utama");
+        System.out.println("-------------------------------------");
+        System.out.print("Pilih menu> ");
+
+        String selectedMenu = input.nextLine();
+
+        if (selectedMenu.equals("0")) {
+            System.exit(0);
+        } else if (selectedMenu.equals("1")) {
+            Kata.Save();
+            System.exit(0);
+
+        } else if (selectedMenu.equals("2")) {
+            menu = 100;
+        } else {
+            System.out.println("Kamu salah pilih menu!");
+            backToMenu();
+        }clearScreen();
+
     }
 
     public void clearScreen() {

@@ -64,6 +64,8 @@ public class MainProgram {
                 menu.MenuIRBik();// regresi berganda Keybroad
             }else if(menu.menu == 502){
                 menu.MenuIRBif();// regresi berganda File
+            }else if(menu.menu == 0) {
+                menu.MenuSave();// menu save
             }
         }
 
