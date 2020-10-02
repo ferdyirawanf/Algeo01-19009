@@ -13,11 +13,30 @@ public class InputData {
     Scanner Input = new Scanner(System.in);
 
     public  void InputFile(){
-        //posedure menerima masukan file
-        System.out.print("\nNama FIle: ");
-        String fileName = Input.nextLine();
-        String fileName2 = fileName;
+    	System.out.print("\nLokasi File: ");
+        String dirName = Input.nextLine();
+       
+        File file = null;
+        String[] paths;
+
         try {
+            // Instansiasi objek File
+            file = new File(dirName);
+            // Ambil list files dan masukkan ke string paths
+            paths = file.list();
+            // Tampilkan semua path yang ada
+            System.out.println("\nDaftar File:");
+            for (String path : paths) {
+                System.out.println(path);
+            }
+            
+        	//posedure menerima masukan file
+        	System.out.print("\nNama File: ");
+        	String fileNam = Input.nextLine();
+        	dirName += '/';
+        	String fileName = dirName + fileNam;
+        	String fileName2 = fileName;
+        
             // membaca file
             File myFile = new File(fileName);
             Scanner fileReader = new Scanner(myFile);

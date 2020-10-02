@@ -2,6 +2,7 @@
 import java.util.Scanner;
 
 public class ADTMatriks {
+    private static String Hasil;
     /* ##### KONSTUKTOR definisi MATRIK ##### */
     int BrsEff;
     int KolEff;
@@ -13,12 +14,14 @@ public class ADTMatriks {
     int Kdet; //faktor pangkat di determinen
     float Det; // peyimpanan nilai determinan matrik
     int  x, y;
+    boolean balikan = true;
 
     float estimasi; // kasus interpolasi
 
     float[] taksiran;//kasus taksiran regresi  
 
-    String Hasil;
+    //String Hasil;
+    String FileToSave;
 
 
 
@@ -224,7 +227,7 @@ public class ADTMatriks {
         if(IsBujurSangkar()){// kasus matrik Determinan
             MemS = new float[NBrsEff()][NKolEff()];
         }else{// kasus matrik spl metode cramer
-            MemS = new float[NBrsEff()][NBrsEff()];
+            MemS = new float[NBrsEff()][NKolEff()-1];
 
         }
         NMemS = NBrsEff();
@@ -290,13 +293,16 @@ public class ADTMatriks {
         MakeMatrikS(); // salnin matrik Men ke MenS
         MakeSegitigaAtas();
         System.out.println("\nMatrik Reduksi Segitiga Atas:");
+        FileToSave += ("\nMatrik Reduksi Segitiga Atas:\n");
         for (int i = 0; i < NBrsEff() ;i++ ) {
             for (int j = 0;j < NKolEff() ;j++ ) {
                 if (j == GetLastIdxKol()){
                     System.out.printf("%.4f\n",MemS[i][j]);
+                    FileToSave += (MemS[i][j]+"\n");
 
                 }else{
                     System.out.printf("%.4f,",MemS[i][j]);
+                    FileToSave += (MemS[i][j]+" ");
                 }
 
             }
@@ -335,6 +341,9 @@ public class ADTMatriks {
 
     }
     public void TulisDeterminanReduksi(){
+        FileToSave = "//Determinan Reduksi//\n";
+        SimpanInputan();
+
         if(IsBujurSangkar()) {
             if (IsAllSatu(Mem) && NBrsEff() != 1) {
                 Hasil = ("= Tidak Dapat diselesaikan,\n terdapat pembagian dengan nol menghasilkan NaN");
@@ -349,6 +358,8 @@ public class ADTMatriks {
             Hasil = ("Matrik imputan bukan matrik bujur sangkar\n Determinan tidak dapat dihitung!!");
             System.out.println(Hasil + "\n");
         }
+
+        FileToSave += Hasil;
     }
 
 
@@ -424,11 +435,15 @@ public class ADTMatriks {
                     detKofaktor -=  Mem[0][i]*detMinor;
                 }
 
+
             }
 
         }
         Hasil += (")\n = ")+ String.valueOf(detKofaktor);
         Det = detKofaktor;
+        FileToSave = "//Determinan Reduksi//\n";
+        SimpanInputan();
+        FileToSave += Hasil;
     }
     public void TulisDeterminanKofaktor(){
         if(IsBujurSangkar()) {
@@ -444,6 +459,9 @@ public class ADTMatriks {
     }
 
     public void DeterminenXYZCramer(){
+        FileToSave = "//Sistem Perssaman Kaidah Carmer//\n";
+        SimpanInputan();
+        
         float DetTotal;
         DetTotal = DeterminanReduksi();
         if(DetTotal != 0){
@@ -461,7 +479,8 @@ public class ADTMatriks {
             for (int i = 0; i < NMemS ;i++ ) {
                 Cramer[i] = DetXyz[i] / DetTotal;
             }
-            System.out.print("\n Solusi Penyelesaian:");
+            System.out.print("\n Solusi Penyelesaian:\n");
+            Hasil = ("\n Solusi Penyelesaian:\n");
 
             for (int i = 0; i < NMemS ;i++ ) {
                 // misal keluaran x1 = 1, x2 = 3, dst
@@ -471,18 +490,19 @@ public class ADTMatriks {
                 System.out.print(Cramer[i]);
                 if(i == NMemS - 1) {
                     System.out.print(".\n");
+                    Hasil += ("X_" + (i+1) + " = " + Cramer[i]+ ".\n");
                 }
                 else{
                     System.out.print(", ");
+                    Hasil += ("X_" + (i+1) + " = " + Cramer[i]+ ",");
                 }
 
             }
 
-
-
         }else{
-            System.out.println("Tidak memiliki solusi\n Determinan Matrik inputan = 0");
-        }
+            System.out.println("Tidak memiliki solusi\nDeterminan Matrik inputan = 0\n");
+            Hasil = ("Tidak memiliki solusi\nDeterminan Matrik inputan = 0\n");
+        }FileToSave += Hasil;
 
     }
 
@@ -502,24 +522,29 @@ public class ADTMatriks {
         // program menuliskan matrik balikan program ini dipanggil di MakeMatrikBalikan
         for (int i = 0; i < N ;i++ ) {
             for (int j = 0;j < N ;j++ ) {
-                double temp;
+                float temp;
                 temp = M[i][j];
                 if (j == N-1){
 
                     if(temp == M[i][j] ){
+                        Hasil += String.valueOf(temp) +"\n";
                         System.out.printf("%.4f\n",temp);
+
                     }else{
-                        System.out.printf("%.4f\n",M[i][j]);
+                        System.out.printf("%.4f",M[i][j]);
+                        Hasil += (String.valueOf(M[i][j]) +"\n");
                     }
-                    System.out.println("\n");
+
 
                 }else{
                     if(temp == M[i][j] ){
                         System.out.printf("%.4f ",temp);
+                        Hasil += String.valueOf(temp) +"\n";
                     }else{
                         System.out.printf("%.4f ",M[i][j]);
+                        Hasil += String.valueOf(M[i][j]) +"\n";
                     }
-                    System.out.println("\n");
+
                 }
 
             }
@@ -531,8 +556,10 @@ public class ADTMatriks {
             for(int j = 0;j<2*N;j++){
                 if(j<(2*N)-1){
                     System.out.printf("%.4f ",K[i][j]);
+                    Hasil += (String.valueOf(K[i][j]) +" ");
                 }else{
                     System.out.printf("%.4f\n",K[i][j]);
+                    Hasil += (String.valueOf(K[i][j]) +"\n");
                 }
             }
         }
@@ -541,7 +568,7 @@ public class ADTMatriks {
     // membuat dan menuliksan matrik balikan
     public void MakeMatrikBalikan(int N,float[][]M){
         // deklarasi variable balikan
-        boolean balikan = true;
+        
         float [][] MInverse = new float [N][N];
         int Baris = N;
         int Kolom = N;
@@ -568,6 +595,7 @@ public class ADTMatriks {
             }
         }
         System.out.println("\nMatriks Augmented yang digunakan  :");
+        Hasil = ("\nMatriks Augmented yang digunakan  :\n");
         TulisMatriksAugMB(BarisAugmented,MatriksAugmented);
         // check apakah elemen awal '0'
         if(MatriksAugmented[0][0] == 0){
@@ -616,6 +644,7 @@ public class ADTMatriks {
             }
             // Tulis Matriks Inverse
             System.out.println("\nMatriks Inverse:");
+            Hasil += ("\nMatriks Inverse:\n");
             TulisMatriksBalikan(N,MInverse);
 
             // copy matriks
@@ -628,6 +657,7 @@ public class ADTMatriks {
 
         }else{
             System.out.println("Matriks tersebut Matriks Singular");
+            Hasil += ("Matriks tersebut Matriks Singular\n");
         }
 
     }
@@ -635,9 +665,14 @@ public class ADTMatriks {
     public void ProgramTulisMatrikBalikan(){
         MakeMatrikS();
         MakeMatrikBalikan(NBrsEff(),MemS);
+        FileToSave = "//Matrik Balikan//\n";
+        SimpanInputan();
+        FileToSave += Hasil;
 
     }
     public void TulisSPLmatrikBalikan(){
+        FileToSave = "//Sistem Perssaman Linier Matrik Balikan//\n";
+        SimpanInputan();
          // Mencari balikan dari matriks_augmented
         int baris, kolom;
 
@@ -649,7 +684,7 @@ public class ADTMatriks {
         MakeMatrikA();
 
 
-        if(baris==kolom){
+        if(baris==kolom && balikan){
             MakeMatrikBalikan(baris,MemA);
 
             // perkalian matriks
@@ -664,19 +699,25 @@ public class ADTMatriks {
 
             // Melakukan print solusi spl
             System.out.println("\nSolusi Penyelesaian :");
+            Hasil += ("\nSolusi Penyelesaian :\n");
             for(int i=0;i<baris;i++){
                 for(int j=0;j<1;j++){
                     if(i==(baris-1)) {
                         System.out.printf("X_%d = %.4f\n",(i+1),result[i]);
+                        Hasil += ("X_%d = "+ (i+1)+ result[i]+"\n");
                     }else{
                         System.out.printf("X_%d = %.4f, ",(i+1),result[i]);
+                        Hasil += ("X_%d = "+ (i+1)+ result[i]+" ");
                     }
                 }
             }
 
         }else{
             System.out.println("SPL tidak dapat diselesaikan dengan Metode Matriks Balikan ");
+            Hasil += ("SPL tidak dapat diselesaikan dengan Metode Matriks Balikan\n ");
         }
+
+        FileToSave += Hasil;
 
     }
 
@@ -886,8 +927,10 @@ public class ADTMatriks {
                 }
             }
             System.out.println("\nMatriks bersolusi tunggal/unik dengan solusi sebagai berikut:");
+            Hasil = "\nMatriks bersolusi tunggal/unik dengan solusi sebagai berikut:\n";
             for (i = 0; i < c; i++) {
                 System.out.println("X_" + (i + 1) + " = " + Solusi[i]);
+                Hasil += ("X_" + (i + 1) + " = " + Solusi[i]+"\n");
             }
         }
         else{
@@ -903,6 +946,7 @@ public class ADTMatriks {
             }
             if (y == kolom) {                                    // Jika ditemukan satu baris nol semua kecuali konstanta
                 System.out.println("\nMatriks tidak memiliki solusi");
+                Hasil = "\nMatriks tidak memiliki solusi.";
             }
             else {
                 for (i = baris-1; i > 0; i--){                              // Pencarian terbalik dari baris bawah
@@ -937,6 +981,7 @@ public class ADTMatriks {
                 }
                 if (y == kolom){                                    // Jika ditemukan satu baris nol semua kecuali konstanta
                     System.out.println("\nMatriks tidak memiliki solusi");
+                    Hasil = "\nMatriks tidak memiliki solusi.";
                 } else {                                            // Jika tidak ada yang semuanya nol kecuali konstanta
                     float[][] subInt = new float[kolom][kolom + 1]; // Deklarasi matriks untuk salinan matriks augmented
                     for (i = 0; i < kolom; i++) {                   // namun posisinya sesuai dengan posisi 1 utama, misalnya
@@ -1002,20 +1047,25 @@ public class ADTMatriks {
                             result[i] = substitusi[i][i];           // menyalin hasil parameter ke array hasil
                         }
                     }
-                    System.out.println(("\nMatriks mempunyai solusi banyak/tak berhingga ditulis dalam parameter sebagai berikut:"));
+                    System.out.println(("\nMatriks mempunyai solusi banyak/tak berhingga\n ditulis dalam parameter sebagai berikut:"));
+                    Hasil = "\nMatriks mempunyai solusi banyak/tak berhingga\n ditulis dalam parameter sebagai berikut:\n";
                     for (i = 0; i < kolom; i++) {
                         if (subInt[i][i] != 0) {
                             if (subInt[i][kolom] == 0){
                                 if (result[i] == ""){
                                     System.out.println("X_" + (i + 1) + " = 0");
+                                    Hasil += ("X_" + (i + 1) + " = 0\n");
                                 }else {
                                     System.out.println("X_" + (i + 1) + " = " + result[i]);
+                                    Hasil += ("X_" + (i + 1) + " = " + result[i] +"\n");
                                 }
                             } else{
                                 System.out.println("X_" + (i + 1) + " = " + substitusi[i][kolom] + result[i]);
+                                Hasil += ("X_" + (i + 1) + " = " + substitusi[i][kolom] + result[i] +"\n");
                             }
                         } else {
                             System.out.println("X_" + (i + 1) + " = " + result[i]);
+                            Hasil += ("X_" + (i + 1) + " = " + result[i] +"\n");
                         }
                     }
                 }
@@ -1075,15 +1125,17 @@ public class ADTMatriks {
 
         if ((diagonal) && (NKolEff()-1 <= NBrsEff())){                    // Jika semua diagonal utama bernilai 1
             System.out.println("\nMatriks bersolusi tunggal/unik dengan solusi sebagai berikut:");
+            Hasil = ("\nMatriks bersolusi tunggal/unik dengan solusi sebagai berikut:\n");
             for (i = 0; i < c; i++) {
                 System.out.println("X_" + (i + 1) + " = " + MemA[i][NKolEff()-1]);
+                Hasil += ("X_" + (i + 1) + " = " + MemA[i][NKolEff()-1]+"\n");
             }
 
         } else {                                                // Jika diagonal utama ada yang nol
             tanda:
             {
                 for (l = NBrsEff() - 1; l >= 0; l--) {              // Proses mencari apa terdapat baris yang isinya nol
-                    for (y = 0; y < NKolEff()-1; y++){              // semua namun konstantanya bukan nol
+                    for (y = 0; y < NKolEff(); y++){              // semua namun konstantanya bukan nol
                         if (MemA[l][y] !=  0){
                             break tanda;
                         }
@@ -1093,6 +1145,7 @@ public class ADTMatriks {
 
             if (y == NKolEff()-1){                                    // Jika ditemukan satu baris nol semua kecuali konstanta
                 System.out.println("\nMatriks tidak memiliki solusi");
+                Hasil = ("\nMatriks tidak memiliki solusi.");
 
             } else {                                            // Jika tidak ada yang semuanya nol kecuali konstanta
                 float[][] subInt = new float[NKolEff()-1][NKolEff()]; // Deklarasi matriks untuk salinan matriks augmented
@@ -1160,35 +1213,86 @@ public class ADTMatriks {
                     }
                 }
                 System.out.println(("\nMatriks mempunyai solusi banyak/tak berhingga ditulis dalam parameter sebagai berikut:"));
+                Hasil = ("\nMatriks mempunyai solusi banyak/tak berhingga ditulis dalam parameter sebagai berikut:\n");
                 for (i = 0; i < NKolEff()-1; i++) {
                     if (subInt[i][i] != 0) {
                         if (subInt[i][NKolEff()-1] == 0){
                             if (result[i] == ""){
                                 System.out.println("X_" + (i + 1) + " = 0");
+                                Hasil += ("X_" + (i + 1) + " = 0\n");
                             }else {
                                 System.out.println("X_" + (i + 1) + " = " + result[i]);
+                                Hasil += ("X_" + (i + 1) + " = " + result[i]+"\n");
                             }
                         } else{
                             System.out.println("X_" + (i + 1) + " = " + substitusi[i][NKolEff()-1] + result[i]);
+                            Hasil += ("X_" + (i + 1) + " = " + substitusi[i][NKolEff()-1] + result[i]+"\n");
                         }
                     } else {
                         System.out.println("X_" + (i + 1) + " = " + result[i]);
+                        Hasil += ("X_" + (i + 1) + " = " + result[i]+"\n");
                     }
                 }
             }
             
         }
     }
+    public void SimpanInputan(){
+        FileToSave += "Matrik Inputan:\n";
+        for (int i =0;i <NBrsEff() ;i++ ) {
+            for (int j = 0; j < NKolEff() ;j++ ) {
+                if(j == NKolEff()-1){
+                    FileToSave += String.valueOf(Mem[i][j]);
+                    FileToSave += "\n";
+                }else{
+                    FileToSave += String.valueOf(Mem[i][j]);
+                    FileToSave += " ";
+                }
+                
+            }
+            
+        }
+
+    }
+    public void SimpanMatrikA(){
+        for (int i =0;i <NBrsEff() ;i++ ) {
+            for (int j = 0; j < NKolEff() ;j++ ) {
+                if(j == NKolEff()-1){
+                    FileToSave += String.valueOf(MemA[i][j]);
+                    FileToSave += "\n";
+                }else{
+                    FileToSave += String.valueOf(MemA[i][j]);
+                    FileToSave += " ";
+                }
+                
+            }
+            
+        }
+    }
+
     public void TulisSPLGaus(){
+    	FileToSave = "//Sistem Perssaman Linier Gauss//\n";
+    	SimpanInputan();
+    	FileToSave += "\nMatrik Gauss:\n";
+    	SimpanMatrikA();
         SPLGaus();
+        FileToSave +=  Hasil;
         System.out.println("\n");
     }
     public void TulisSPLGausJordan(){
+        FileToSave = "//Sistem Perssaman Linier Gauss Jordan//\n";
+        SimpanInputan();
+        FileToSave += "\nMatrik Gauss Jordan:\n";
+        SimpanMatrikA();
         SPLGausJordan();
+        FileToSave +=  Hasil;
         System.out.println("\n");
     }
 
     public void BacaTulisInterpolasi(){
+        FileToSave = "//Interpolasi Polinom//\n";
+        SimpanInputan();
+        
         float  temp, pembagi, pembagi2;
         int titik;
         titik = NBrsEff();
@@ -1282,30 +1386,42 @@ public class ADTMatriks {
         // Proses Output
         // Output Persamaan polinom interpolasi
         System.out.println("\nPersamaan polinom interpolasi:");
+        FileToSave += ("\nPersamaan polinom interpolasi:\n");
+        
         System.out.print("P(x) = ");
+        FileToSave += ("P(x) = ");
         if (ArraySolusi[0] != 0){                                       // Input konstanta atau angka paling depan
             System.out.print(StrSolusi[0] + " ");                       // yang tidak diikuti x
+            FileToSave += (StrSolusi[0] + " ");  
         }
         for (i = 1; i < titik; i++){                                    // Output koefisien beserta variabel (x)
             if (ArraySolusi[i] > 0){
                 System.out.print("+ " + StrSolusi[i] + "x^" + i + " ");
+                FileToSave += ("+ " + StrSolusi[i] + "x^" + i + " ");
             } else if (ArraySolusi[i] < 0){
                 System.out.print(StrSolusi[i] + "x^" + i + " ");
+                FileToSave += (StrSolusi[i] + "x^" + i + " ");
             }
         }
         System.out.println("\n");
+        FileToSave += ("\n");
+
 
         // Output Nilai
         System.out.print("Hasil dari interpolasi polinom di titik x = " + estimasi + " adalah ");
+        FileToSave += ("Hasil dari interpolasi polinom di titik x = " + estimasi + " adalah ");
         float jumlah = 0;
         for (i = 0; i < titik; i++){
             jumlah += ArraySolusi[i]*(Math.pow(estimasi, i));           // Proses menghitung nilai dengan substitusi
         }                                                               // x atau angka estimasi yang diinginkan
         System.out.printf("%.4f",jumlah);
         System.out.println("\n");
+        FileToSave += (jumlah + "\n");
     }
 
     public void BacaTulisSolusiRe(){
+        FileToSave = "//Regresi Linier Berganda//\n";
+        SimpanInputan();
         int i, j, k, l, variabel, ndata;
         float regresi, temp, pembagi, pembagi2;
 
@@ -1402,30 +1518,43 @@ public class ADTMatriks {
         // Proses Output
         // Output persamaan regresi
         System.out.println("\nPersamaan regresi:");
+        FileToSave += ("\nPersamaan regresi:\n");
         System.out.print("Y = ");
+        FileToSave += ("Y = ");
         if (Solusi_regresi[0] != 0){
             System.out.print(StrSolusi[0] + " ");                           // Print konstanta atau angka paling depan
+            FileToSave += (StrSolusi[0] + " ");  
         }
         for (i = 1; i < variabel; i++){                                     // Output koefisien dan variabel X
             if (Solusi_regresi[i] > 0){
                 System.out.print("+ " + StrSolusi[i] + "X_" + i + " ");
+                FileToSave += ("+ " + StrSolusi[i] + "X_" + i + " ");
             } else if (Solusi_regresi[i] < 0){
                 System.out.print(StrSolusi[i] + "X_" + i + " ");
+                FileToSave += (StrSolusi[i] + "X_" + i + " ");
             }
         }
         System.out.println("\n");
+        FileToSave += ("\n");
+
 
         // Output hasil regresi yang ditaksir di suatu titik
         System.out.print("Hasil regresi yang di taksir dengan\n ");
+        FileToSave += ("Hasil regresi yang di taksir dengan\n ");
         for (i = 0; i < variabel-1; i++){
             System.out.print("X" + (i + 1) + " = " + taksiran[i]);
+            FileToSave +=("X" + (i + 1) + " = " + taksiran[i]);
             if (i < variabel - 2){
                 System.out.print(", ");
+                FileToSave += (", ");
             } else {
                 System.out.print(" ");
+                FileToSave += (" ");
             }
         }
         System.out.print("\n adalah ");
+        FileToSave += ("\n adalah ");
+
 
         float jumlah = 0;
         for (i = 1; i < variabel; i++){
@@ -1434,6 +1563,8 @@ public class ADTMatriks {
         regresi = Solusi_regresi[0]+jumlah;                             // Menjumlahkan dengan konstanta atau angka pertama
         System.out.println(regresi);
         System.out.println("");
+        FileToSave += (regresi + " ");
+
     }
     
           
